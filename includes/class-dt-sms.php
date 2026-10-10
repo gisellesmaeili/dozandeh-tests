@@ -53,6 +53,13 @@ final class DT_Sms
         return array_values($out);
     }
 
+    /** A safe display value for the saved key: 8 dots and the last 4 characters. */
+    public static function mask($key)
+    {
+        $key = (string) $key;
+        return '' === $key ? '' : str_repeat('•', 8) . substr($key, -4);
+    }
+
     /** True when the toggle is on and all fields have a value. */
     public static function is_ready()
     {
@@ -128,6 +135,7 @@ final class DT_Sms
             self::ENDPOINT,
             [
                 'timeout' => 15,
+                'redirection' => 0, // A redirect can change POST to GET. Show it as an error instead.
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'ApiKey' => $s['api_key'],
@@ -147,15 +155,29 @@ final class DT_Sms
             return self::log(false, $response->get_error_message());
         }
 
-        $data = json_decode(wp_remote_retrieve_body($response), true);
-        $ok = is_array($data) && !empty($data['Success']);
-        $text = is_array($data) && !empty($data['Message'])
-            ? (string) $data['Message']
-            : 'HTTP ' . wp_remote_retrieve_response_code($response);
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $body = trim(preg_replace('/^\xEF\xBB\xBF/', '', (string) wp_remote_retrieve_body($response))); // Remove a BOM.
+
+        // Read the keys in any letter case: "Success", "success", "SUCCESS".
+        $data = json_decode($body, true);
+        $data = is_array($data) ? array_change_key_case($data, CASE_LOWER) : [];
+
+        $ok = isset($data['success']) && filter_var($data['success'], FILTER_VALIDATE_BOOLEAN);
+        $text = isset($data['message']) && is_scalar($data['message']) ? trim((string) $data['message']) : '';
+
+        if ('' === $text) {
+            // No message in the answer. Save the HTTP code and the start of the raw answer.
+            $text = 'HTTP ' . $code;
+            if ($code >= 300 && $code < 400) {
+                $text .= ' — redirect to: ' . wp_remote_retrieve_header($response, 'location');
+            } else {
+                $text .= '' !== $body ? ' — ' . mb_substr($body, 0, 200) : ' — پاسخ خالی';
+            }
+        }
 
         return self::log($ok, $text);
     }
-
+    
     /** Save the result of the last SMS. The API key is never saved here. */
     private static function log($ok, $text)
     {

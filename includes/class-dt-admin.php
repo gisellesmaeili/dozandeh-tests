@@ -376,11 +376,11 @@ final class DT_Admin {
 					</label>
 
 					<div id="dt-sms-fields" <?php echo $s['enabled'] ? '' : 'hidden'; ?>>
-						<div class="dt-a-field">
+                        <div class="dt-a-field">
 							<label for="dt-sms-key">کلید دسترسی (API Key) پنل لیمو اس‌ام‌اس</label>
-							<input type="password" id="dt-sms-key" name="api_key" class="dt-a-input dt-a-ltr" autocomplete="new-password" placeholder="<?php echo $has_key ? '••••••••••••' : ''; ?>">
+							<input type="text" id="dt-sms-key" name="api_key" class="dt-a-input dt-a-ltr" autocomplete="off" spellcheck="false" value="<?php echo esc_attr( DT_Sms::mask( $s['api_key'] ) ); ?>">
 							<?php if ( $has_key ) : ?>
-								<p class="dt-a-hint">کلید ذخیره شده است. برای تغییر، کلید جدید را وارد کنید. اگر این فیلد خالی بماند، کلید قبلی حفظ می‌شود.</p>
+								<p class="dt-a-hint">کلید ذخیره شده است و برای امنیت به‌صورت ناقص نمایش داده می‌شود. برای تغییر، کلید جدید را کامل وارد کنید. اگر این مقدار را تغییر ندهید، کلید قبلی حفظ می‌شود.</p>
 							<?php endif; ?>
 						</div>
 
@@ -438,7 +438,8 @@ final class DT_Admin {
 
 		$new = [
 			'enabled' => ! empty( $_POST['enabled'] ) ? 1 : 0, // phpcs:ignore
-			'api_key' => '' !== $key ? $key : $old['api_key'], // An empty field keeps the old key.
+            // An empty field, or the masked value, keeps the old key.
+            'api_key' => ('' === $key || false !== strpos($key, '•')) ? $old['api_key'] : $key,
 			'sender'  => $sender,
 			'numbers' => implode( "\n", $numbers ),
 		];
