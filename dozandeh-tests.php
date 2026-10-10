@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       آزمون‌های روانشناسی دکتر دوزنده
  * Description:       افزونه سبک آزمون‌های روانشناسی
- * Version:           1.1.3
+ * Version:           1.1.4
  * Author:            Giselle Esmaeili
  * Author URI:        https://www.linkedin.com/in/qazal-esmaeili-developer
  * Requires at least: 6.3
@@ -12,7 +12,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DT_VERSION', '1.1.3' );
+define( 'DT_VERSION', '1.1.4' );
 define( 'DT_DB_VERSION', '2' );
 define( 'DT_FILE', __FILE__ );
 define( 'DT_PATH', plugin_dir_path( __FILE__ ) );

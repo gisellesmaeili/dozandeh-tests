@@ -378,15 +378,17 @@ final class DT_Admin {
 					<div id="dt-sms-fields" <?php echo $s['enabled'] ? '' : 'hidden'; ?>>
                         <div class="dt-a-field">
 							<label for="dt-sms-key">کلید دسترسی (API Key) پنل لیمو اس‌ام‌اس</label>
-							<input type="text" id="dt-sms-key" name="api_key" class="dt-a-input dt-a-ltr" autocomplete="off" spellcheck="false" value="<?php echo esc_attr( DT_Sms::mask( $s['api_key'] ) ); ?>">
-							<?php if ( $has_key ) : ?>
-								<p class="dt-a-hint">کلید ذخیره شده است و برای امنیت به‌صورت ناقص نمایش داده می‌شود. برای تغییر، کلید جدید را کامل وارد کنید. اگر این مقدار را تغییر ندهید، کلید قبلی حفظ می‌شود.</p>
-							<?php endif; ?>
-						</div>
+							<input type="text" id="dt-sms-key" name="api_key" class="dt-a-input dt-a-ltr" autocomplete="off" spellcheck="false" value="<?php echo esc_attr(DT_Sms::mask($s['api_key'])); ?>">
+                            <?php if ($has_key): ?>
+                                <p class="dt-a-hint">کلید ذخیره شده است و برای امنیت به‌صورت ناقص نمایش داده می‌شود. برای تغییر، کلید جدید را کامل
+                                    وارد کنید. اگر این مقدار را تغییر ندهید، کلید قبلی حفظ می‌شود.</p>
+                            <?php endif; ?>
+                        </div>
 
-						<div class="dt-a-field">
+                        <div class="dt-a-field">
 							<label for="dt-sms-sender">شماره خط ارسال‌کننده</label>
-							<input type="text" id="dt-sms-sender" name="sender" class="dt-a-input dt-a-ltr" inputmode="numeric" value="<?php echo esc_attr( $s['sender'] ); ?>" placeholder="مثال: 30001234567890">
+							<input type="text" id="dt-sms-sender" name="sender" class="dt-a-input dt-a-ltr" autocomplete="off" spellcheck="false" value="<?php echo esc_attr( $s['sender'] ); ?>" placeholder="مثال: vip">
+							<p class="dt-a-hint">شماره خط یا نام خط را دقیقاً مثل پنل لیمو اس‌ام‌اس وارد کنید (مثلاً <code>vip</code>). حروف انگلیسی، عدد و علامت‌های + _ . - مجاز هستند.</p>
 						</div>
 
 						<div class="dt-a-field">
@@ -433,7 +435,8 @@ final class DT_Admin {
 
 		$old     = DT_Sms::settings();
 		$key     = isset( $_POST['api_key'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) ) : ''; // phpcs:ignore
-		$sender  = isset( $_POST['sender'] ) ? preg_replace( '/[^0-9+]/', '', dt_to_en_digits( sanitize_text_field( wp_unslash( $_POST['sender'] ) ) ) ) : ''; // phpcs:ignore
+        // Allowed: letters, digits, plus, underscore, dot, and dash. Example: "vip" or "30001234567890".
+        $sender = isset($_POST['sender']) ? preg_replace('/[^A-Za-z0-9+_.-]/', '', dt_to_en_digits(sanitize_text_field(wp_unslash($_POST['sender'])))) : ''; // phpcs:ignore
 		$numbers = isset( $_POST['numbers'] ) ? DT_Sms::parse_numbers( sanitize_textarea_field( wp_unslash( $_POST['numbers'] ) ) ) : []; // phpcs:ignore
 
 		$new = [
