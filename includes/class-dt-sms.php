@@ -74,26 +74,16 @@ final class DT_Sms
     /** Make the SMS text. Persian SMS: 70 characters for each part. A long text costs more. */
     public static function build_message(array $d)
     {
-        $res = $d['result'];
         $lines = [
             'نتیجه آزمون جدید',
             'آزمون: ' . $d['quiz_title'],
             'نام: ' . $d['name'],
-            'موبایل: ' . $d['phone'],
+            'تلفن: ' . $d['phone'],
         ];
 
-        if ($d['age']) {
-            $lines[] = 'سن: ' . $d['age'];
-        }
-        if (!empty($res['overall']['label'])) {
-            $lines[] = 'نتیجه کلی: ' . $res['overall']['label'];
-        }
-        foreach ($res['dimensions'] as $dim) {
-            $level = !empty($dim['label']) ? $dim['label'] . ' ' : '';
-            $lines[] = $dim['name'] . ': ' . $level . '(' . $dim['percent'] . '%)';
-        }
-        if (!empty($res['flags'])) {
-            $lines[] = 'نیازمند توجه: ' . implode('، ', wp_list_pluck($res['flags'], 'name'));
+        // The overall result exists only if you defined the overall levels in the test.
+        if (!empty($d['result']['overall']['label'])) {
+            $lines[] = 'نتیجه کلی: ' . $d['result']['overall']['label'];
         }
 
         $text = apply_filters('dt_sms_message', implode("\n", $lines), $d);

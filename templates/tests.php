@@ -3,7 +3,9 @@ defined( 'ABSPATH' ) || exit;
 
 $phone     = dt_phone();
 $tel       = 'tel:' . preg_replace( '/\D/', '', $phone );
-$phone_fmt = dt_to_fa_digits( substr( $phone, 0, 4 ) . ' ' . substr( $phone, 4, 3 ) . ' ' . substr( $phone, 7 ) );
+$therapist = dt_therapist();
+// Split only 11-digit mobile numbers (0912 345 6789). Show other numbers as they are.
+$phone_fmt = dt_to_fa_digits( 11 === strlen( $phone ) ? substr( $phone, 0, 4 ) . ' ' . substr( $phone, 4, 3 ) . ' ' . substr( $phone, 7 ) : $phone );
 ?>
     <div class="dt-app" id="dt-app" dir="rtl" lang="fa">
 
@@ -67,12 +69,12 @@ $phone_fmt = dt_to_fa_digits( substr( $phone, 0, 4 ) . ' ' . substr( $phone, 4, 
 
         <section class="dt-view" data-view="result" hidden></section>
 
-        <a class="dt-cta" href="<?php echo esc_url( $tel ); ?>" aria-label="تماس با دکتر راجیه دوزنده">
+        <a class="dt-cta" href="<?php echo esc_url( $tel ); ?>" aria-label="<?php echo esc_attr( 'تماس با ' . $therapist ); ?>">
 		<span class="dt-cta__icon" aria-hidden="true">
 			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
 		</span>
             <span class="dt-cta__text">
-			<span class="dt-cta__label">مشاوره با دکتر دوزنده</span>
+			<span class="dt-cta__label"><?php echo esc_html( 'مشاوره با ' . $therapist ); ?></span>
 			<span class="dt-cta__num" dir="ltr"><?php echo esc_html( $phone_fmt ); ?></span>
 		</span>
         </a>
@@ -95,7 +97,7 @@ $phone_fmt = dt_to_fa_digits( substr( $phone, 0, 4 ) . ' ' . substr( $phone, 4, 
             [
                 '@context'        => 'https://schema.org',
                 '@type'           => 'ItemList',
-                'name'            => 'آزمون‌های روانشناسی دکتر راجیه دوزنده',
+                'name'            => 'آزمون‌های روانشناسی ' . $therapist,
                 'itemListElement' => $items,
             ],
             JSON_UNESCAPED_UNICODE | JSON_HEX_TAG

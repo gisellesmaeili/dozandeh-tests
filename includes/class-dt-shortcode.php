@@ -34,6 +34,7 @@ final class DT_Shortcode {
             [
                 'rest' => esc_url_raw( rest_url( DT_Rest::NS . '/' ) ),
                 'tel'  => 'tel:' . preg_replace( '/\D/', '', dt_phone() ),
+                'name' => dt_therapist(),
             ]
         );
 

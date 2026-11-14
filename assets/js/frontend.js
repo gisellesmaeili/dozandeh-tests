@@ -174,7 +174,7 @@
 				<div class="dt-dims">${res.dimensions.map(bar).join('')}</div>
 
 				${res.note ? `<div class="dt-note"><h3>توضیح نتیجه</h3><p>${esc(res.note)}</p></div>` : ''}
-				<p class="dt-disclaimer">این آزمون ابزار خودآگاهی است و جایگزین تشخیص بالینی نیست. برای تفسیر دقیق نتیجه با دکتر دوزنده مشورت کنید.</p>
+				<p class="dt-disclaimer">این آزمون ابزار خودآگاهی است و جایگزین تشخیص بالینی نیست. برای تفسیر دقیق نتیجه با ${esc(DT.name)} مشورت کنید.</p>
 				<div class="dt-actions">
 					<a class="dt-btn dt-btn--primary" href="${esc(DT.tel)}">تماس برای مشاوره</a>
 					<button type="button" class="dt-btn dt-btn--ghost" data-act="restart">انجام آزمون دیگر</button>

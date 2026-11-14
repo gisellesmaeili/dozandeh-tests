@@ -112,6 +112,7 @@
 		<div class="dt-a-card dt-a-pad dt-a-dimcard">
 			<div class="dt-a-dim">
 				<input type="text" class="dt-a-input" placeholder="نام مؤلفه" value="${esc(d.name)}" data-f="dim" data-d="${di}">
+				<button type="button" class="dt-a-btn dt-a-btn--outline dt-a-btn--sm" data-act="dup-dim" data-d="${di}">کپی</button>
 				<button type="button" class="dt-a-btn dt-a-btn--ghost dt-a-btn--icon dt-a-danger" data-act="del-dim" data-d="${di}" aria-label="حذف مؤلفه">×</button>
 			</div>
 			<p class="dt-a-hint">سطح‌های این مؤلفه (بر اساس مجموع امتیاز همین مؤلفه):</p>
@@ -142,6 +143,7 @@
 				<div class="dt-a-tools">
 					<button type="button" class="dt-a-btn dt-a-btn--outline dt-a-btn--sm" data-act="up-q" data-q="${qi}" aria-label="انتقال به بالا">↑</button>
 					<button type="button" class="dt-a-btn dt-a-btn--outline dt-a-btn--sm" data-act="down-q" data-q="${qi}" aria-label="انتقال به پایین">↓</button>
+					<button type="button" class="dt-a-btn dt-a-btn--outline dt-a-btn--sm" data-act="dup-q" data-q="${qi}">کپی</button>
 					<button type="button" class="dt-a-btn dt-a-btn--ghost dt-a-btn--sm dt-a-danger" data-act="del-q" data-q="${qi}">حذف سؤال</button>
 				</div>
 			</div>
@@ -325,6 +327,14 @@
             }
             case 'del-lvl': levelList(scope, di).splice(li, 1); break;
             case 'add-dim': quiz.dimensions.push(blankDimension()); break;
+            case 'dup-dim': {
+                // New key so the copy is a separate dimension. Its questions are not copied.
+                const copy = JSON.parse(JSON.stringify(quiz.dimensions[di]));
+                copy.key = uid();
+                copy.name = (copy.name || 'مؤلفه بدون نام') + ' (کپی)';
+                quiz.dimensions.splice(di + 1, 0, copy);
+                break;
+            }
             case 'del-dim': {
                 if (quiz.dimensions.length < 2) return notify('حداقل یک مؤلفه لازم است.', 'error');
                 const key = quiz.dimensions[di].key;
@@ -333,6 +343,7 @@
                 break;
             }
             case 'add-q': quiz.questions.push(blankQuestion()); break;
+            case 'dup-q': quiz.questions.splice(qi + 1, 0, JSON.parse(JSON.stringify(quiz.questions[qi]))); break;
             case 'del-q':
                 if (!window.confirm('این سؤال حذف شود؟')) return;
                 quiz.questions.splice(qi, 1); break;

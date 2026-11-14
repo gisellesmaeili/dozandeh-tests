@@ -21,7 +21,7 @@ final class DT_Admin {
         add_menu_page( 'آزمون‌های روانشناسی', 'آزمون‌ها', self::CAP, 'dt-users', [ __CLASS__, 'page_users' ], 'dashicons-clipboard', 58 );
         add_submenu_page( 'dt-users', 'کاربران آزمون‌ها', 'کاربران', self::CAP, 'dt-users', [ __CLASS__, 'page_users' ] );
         add_submenu_page( 'dt-users', 'مدیریت آزمون‌ها', 'مدیریت آزمون‌ها', self::CAP, 'dt-quizzes', [ __CLASS__, 'page_quizzes' ] );
-        add_submenu_page('dt-users', 'تنظیمات پیامک', 'تنظیمات پیامک', self::CAP, 'dt-sms', [__CLASS__, 'page_sms']);
+        add_submenu_page('dt-users', 'تنظیمات', 'تنظیمات', self::CAP, 'dt-sms', [__CLASS__, 'page_sms']);
     }
 
     public static function assets() {
@@ -352,8 +352,8 @@ final class DT_Admin {
 		<div class="dt-admin" dir="rtl">
 			<div class="dt-a-head">
 				<div>
-					<h1 class="dt-a-title">تنظیمات پیامک</h1>
-					<p class="dt-a-sub">اطلاعات هر شرکت‌کننده پس از ثبت فرم، با پیامک برای مدیر ارسال می‌شود.</p>
+					<h1 class="dt-a-title">تنظیمات</h1>
+					<p class="dt-a-sub">اطلاعات درمانگر و تنظیمات ارسال پیامک.</p>
 				</div>
 			</div>
 
@@ -364,6 +364,19 @@ final class DT_Admin {
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="dt_save_sms">
 				<?php wp_nonce_field( 'dt_save_sms' ); ?>
+
+				<section class="dt-a-card dt-a-pad" style="margin-bottom:16px">
+					<h2 class="dt-a-h2">اطلاعات درمانگر</h2>
+					<p class="dt-a-hint">این نام و شماره در دکمه تماس و صفحه نتیجه آزمون نمایش داده می‌شوند.</p>
+					<div class="dt-a-field">
+						<label for="dt-therapist-name">نام درمانگر</label>
+						<input type="text" id="dt-therapist-name" name="therapist_name" class="dt-a-input" maxlength="100" value="<?php echo esc_attr( dt_therapist() ); ?>">
+					</div>
+					<div class="dt-a-field">
+						<label for="dt-therapist-phone">شماره تماس درمانگر</label>
+						<input type="text" id="dt-therapist-phone" name="therapist_phone" class="dt-a-input dt-a-ltr" inputmode="numeric" maxlength="15" value="<?php echo esc_attr( dt_phone() ); ?>" placeholder="09123456789">
+					</div>
+				</section>
 
 				<section class="dt-a-card dt-a-pad">
 					<h2 class="dt-a-h2">دریافت پیامک</h2>
@@ -455,6 +468,15 @@ final class DT_Admin {
 
 		update_option( DT_Sms::OPTION, $new, false );
 
+		// Empty values fall back to the defaults in dt_contact().
+		update_option(
+			'dt_contact',
+			[
+				'name'  => isset( $_POST['therapist_name'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['therapist_name'] ) ) ) : '', // phpcs:ignore
+				'phone' => isset( $_POST['therapist_phone'] ) ? preg_replace( '/\D/', '', dt_to_en_digits( sanitize_text_field( wp_unslash( $_POST['therapist_phone'] ) ) ) ) : '', // phpcs:ignore
+			]
+		);
+
 		wp_safe_redirect( add_query_arg( 'dt_msg', $missing ? 'missing' : 'saved', admin_url( 'admin.php?page=dt-sms' ) ) );
 		exit;
 	}
@@ -462,7 +484,7 @@ final class DT_Admin {
 	public static function test_sms() {
 		self::guard( 'dt_test_sms' );
 
-		$ok = DT_Sms::send( 'پیامک آزمایشی افزونه آزمون‌های روانشناسی دکتر دوزنده' );
+		$ok = DT_Sms::send( 'پیامک آزمایشی افزونه آزمون‌های روانشناسی ' . dt_therapist() );
 
 		wp_safe_redirect( add_query_arg( 'dt_msg', $ok ? 'test_ok' : 'test_fail', admin_url( 'admin.php?page=dt-sms' ) ) );
 		exit;

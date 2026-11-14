@@ -196,7 +196,7 @@
 .dt-field input:focus { border-color: var(--dt-primary); outline: 3px solid rgba(145, 0, 25, 0.15); }
 .dt-check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--dt-muted); cursor: pointer; }
 .dt-check input { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 4px; accent-color: var(--dt-primary); }
-.dt-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.dt-hp { position: absolute; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
 .dt-error { margin: 0; padding: 10px 14px; background: #fdecea; color: #ba1a1a; border-radius: 12px; font-size: 14px; font-weight: 600; }
 

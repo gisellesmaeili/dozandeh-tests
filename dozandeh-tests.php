@@ -1,10 +1,13 @@
 <?php
 /**
  * Plugin Name:       آزمون‌های روانشناسی دکتر دوزنده
- * Description:       افزونه سبک آزمون‌های روانشناسی
- * Version:           1.1.4
+ * Plugin URI:        https://github.com/gisellesmaeili/dozandeh-tests
+ * Description:       Lightweight psychology-test plugin: build tests in the admin, show them with the [dozandeh_tests] shortcode, store results and get an SMS when someone finishes a test. / افزونه سبک آزمون‌های روانشناسی
+ * Version:           1.1.5
  * Author:            Giselle Esmaeili
  * Author URI:        https://www.linkedin.com/in/qazal-esmaeili-developer
+ * License:           GPL v2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Text Domain:       dozandeh-tests
@@ -18,9 +21,23 @@ define( 'DT_FILE', __FILE__ );
 define( 'DT_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DT_URL', plugin_dir_url( __FILE__ ) );
 
+/** Therapist name and phone, saved on the settings page. Empty values use the defaults. */
+function dt_contact() {
+    $saved = (array) get_option( 'dt_contact', [] );
+    return [
+        'name'  => ! empty( $saved['name'] ) ? $saved['name'] : 'دکتر راجیه دوزنده',
+        'phone' => ! empty( $saved['phone'] ) ? $saved['phone'] : '09030429138',
+    ];
+}
+
 /** Phone number of the doctor. Use the "dt_phone" filter to change it. */
 function dt_phone() {
-    return apply_filters( 'dt_phone', '09030429138' );
+    return apply_filters( 'dt_phone', dt_contact()['phone'] );
+}
+
+/** Name of the doctor. Use the "dt_therapist" filter to change it. */
+function dt_therapist() {
+    return apply_filters( 'dt_therapist', dt_contact()['name'] );
 }
 
 /** Convert Persian and Arabic digits to English digits. */

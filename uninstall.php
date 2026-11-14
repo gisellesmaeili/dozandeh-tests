@@ -16,4 +16,5 @@ foreach ( [ 'options', 'questions', 'quizzes', 'submissions' ] as $name ) {
 delete_option( 'dt_db_version' );
 delete_option('dt_sms');
 delete_option('dt_sms_last');
+delete_option( 'dt_contact' );
 delete_transient( 'dt_cards' );
