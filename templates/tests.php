@@ -9,60 +9,64 @@ $phone_fmt = dt_to_fa_digits( 11 === strlen( $phone ) ? substr( $phone, 0, 4 ) .
 ?>
     <div class="dt-app" id="dt-app" dir="rtl" lang="fa">
 
-        <section class="dt-view" data-view="cards" aria-labelledby="dt-title">
-            <header class="dt-head">
-                <p class="dt-lead">یکی از آزمون‌ها را انتخاب کنید و به سؤال‌ها صادقانه پاسخ دهید. نتیجه، میزان هر مؤلفه را با نمودار نشان می‌دهد.</p>
-            </header>
+        <section class="dt-view" data-view="cards" aria-label="آزمون‌ها">
+            <p class="dt-lead">یکی از آزمون‌ها را انتخاب کنید و به سؤال‌ها صادقانه پاسخ دهید. نتیجه، میزان هر مؤلفه را با نمودار نشان می‌دهد.</p>
 
-            <p class="dt-error" data-error="cards" role="alert" hidden></p>
+            <p class="dt-alert dt-alert--destructive" data-error="cards" role="alert" hidden></p>
 
             <?php if ( $quizzes ) : ?>
                 <div class="dt-grid">
                     <?php foreach ( $quizzes as $quiz ) : ?>
-                        <article class="dt-card">
-                            <span class="dt-badge"><?php echo esc_html( dt_to_fa_digits( (int) $quiz['question_count'] ) ); ?> سؤال</span>
-                            <h3 class="dt-card__title"><?php echo esc_html( $quiz['title'] ); ?></h3>
-                            <p class="dt-card__desc"><?php echo esc_html( $quiz['description'] ); ?></p>
-                            <button type="button" class="dt-btn dt-btn--primary" data-quiz="<?php echo (int) $quiz['id']; ?>">شروع آزمون</button>
+                        <article class="dt-card dt-card--hover">
+                            <div class="dt-card__header">
+                                <span class="dt-badge dt-badge--secondary"><?php echo esc_html( dt_to_fa_digits( (int) $quiz['question_count'] ) ); ?> سؤال</span>
+                                <h3 class="dt-card__title"><?php echo esc_html( $quiz['title'] ); ?></h3>
+                            </div>
+                            <p class="dt-card__desc dt-card__content"><?php echo esc_html( $quiz['description'] ); ?></p>
+                            <div class="dt-card__footer">
+                                <button type="button" class="dt-btn dt-btn--default dt-btn--block" data-quiz="<?php echo (int) $quiz['id']; ?>">شروع آزمون</button>
+                            </div>
                         </article>
                     <?php endforeach; ?>
                 </div>
             <?php else : ?>
-                <p class="dt-lead">هنوز آزمونی منتشر نشده است.</p>
+                <div class="dt-card dt-empty">هنوز آزمونی منتشر نشده است.</div>
             <?php endif; ?>
 
-            <noscript><p class="dt-error">برای انجام آزمون، جاوااسکریپت مرورگر را فعال کنید.</p></noscript>
+            <noscript><p class="dt-alert dt-alert--destructive">برای انجام آزمون، جاوااسکریپت مرورگر را فعال کنید.</p></noscript>
         </section>
 
         <section class="dt-view" data-view="quiz" hidden></section>
 
         <section class="dt-view" data-view="info" hidden>
-            <div class="dt-panel dt-panel--narrow">
-                <h2 class="dt-title dt-title--sm">یک قدم تا مشاهده نتیجه</h2>
-                <p class="dt-lead">برای نمایش نتیجه، اطلاعات تماس خود را وارد کنید.</p>
+            <div class="dt-card dt-card--narrow">
+                <div class="dt-card__header">
+                    <h2 class="dt-card__title dt-card__title--lg">یک قدم تا مشاهده نتیجه</h2>
+                    <p class="dt-card__desc">برای نمایش نتیجه، اطلاعات تماس خود را وارد کنید.</p>
+                </div>
 
-                <form class="dt-form" novalidate>
+                <form class="dt-form dt-card__content" novalidate>
                     <div class="dt-field">
-                        <label for="dt-name">نام و نام خانوادگی</label>
-                        <input id="dt-name" name="name" type="text" autocomplete="name" maxlength="100" required>
+                        <label class="dt-label" for="dt-name">نام و نام خانوادگی</label>
+                        <input class="dt-input" id="dt-name" name="name" type="text" autocomplete="name" maxlength="100" required>
                     </div>
                     <div class="dt-field">
-                        <label for="dt-phone">شماره موبایل</label>
-                        <input id="dt-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" dir="ltr" maxlength="11" placeholder="09123456789" required>
+                        <label class="dt-label" for="dt-phone">شماره موبایل</label>
+                        <input class="dt-input" id="dt-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" dir="ltr" maxlength="11" placeholder="09123456789" required>
                     </div>
                     <div class="dt-field">
-                        <label for="dt-age">سن (اختیاری)</label>
-                        <input id="dt-age" name="age" type="text" inputmode="numeric" maxlength="3" dir="ltr">
+                        <label class="dt-label" for="dt-age">سن <span class="dt-optional">(اختیاری)</span></label>
+                        <input class="dt-input" id="dt-age" name="age" type="text" inputmode="numeric" maxlength="3" dir="ltr">
                     </div>
                     <div class="dt-hp" aria-hidden="true">
                         <input type="text" name="website" tabindex="-1" autocomplete="off">
                     </div>
                     <label class="dt-check">
-                        <input type="checkbox" name="consent" required>
+                        <input class="dt-checkbox" type="checkbox" name="consent" required>
                         <span>با ذخیره اطلاعات تماس خود برای ارتباط مشاور موافقم.</span>
                     </label>
-                    <p class="dt-error" data-error="info" role="alert" hidden></p>
-                    <button type="submit" class="dt-btn dt-btn--primary">مشاهده نتیجه</button>
+                    <p class="dt-alert dt-alert--destructive" data-error="info" role="alert" hidden></p>
+                    <button type="submit" class="dt-btn dt-btn--default dt-btn--block">مشاهده نتیجه</button>
                 </form>
             </div>
         </section>
