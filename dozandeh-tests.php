@@ -3,7 +3,7 @@
  * Plugin Name:       آزمون‌های روانشناسی دکتر دوزنده
  * Plugin URI:        https://github.com/gisellesmaeili/dozandeh-tests
  * Description:       Lightweight psychology-test plugin: build tests in the admin, show them with the [dozandeh_tests] shortcode, store results and get an SMS when someone finishes a test. / افزونه سبک آزمون‌های روانشناسی
- * Version:           1.1.6
+ * Version:           1.1.7
  * Author:            Giselle Esmaeili
  * Author URI:        https://www.linkedin.com/in/qazal-esmaeili-developer
  * License:           GPL v2 or later
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DT_VERSION', '1.1.6' );
+define( 'DT_VERSION', '1.1.7' );
 define( 'DT_DB_VERSION', '2' );
 define( 'DT_FILE', __FILE__ );
 define( 'DT_PATH', plugin_dir_path( __FILE__ ) );
